@@ -1,5 +1,5 @@
 from aiogram import Bot, types, Dispatcher, executor, types
-from markup import keyboard, keyboard2, markup
+from markup import keyboard, keyboard2, markup, helpKeyboard
 from mg import get_map_cell
 from anekdot import list_of_jokes
 from config import TOKEN
@@ -49,20 +49,18 @@ async def play_maze(message):
         if message.text == 'Maze Game':
             await bot.send_message(message.from_user.id, get_map_str(map_cell, (0, 0)), reply_markup=keyboard)
         elif message.text == 'Help':
-            await bot.send_message(message.chat.id, 'Это помощь', reply_markup=keyboard2)
+            await bot.send_message(message.chat.id, 'Это помощь', reply_markup=helpKeyboard)
         elif message.text == 'Anekdot':
             await bot.send_message(message.chat.id, 'Здравствуйте! Чтобы посмеяться введите любую цифру:')
-        elif message.text == 'Maze':
-            await bot.send_message(message.chat.id, 'fefsrgergr')
         elif message.text == 'Back':
-            await bot.send_message(message.chat.id, reply_markup=markup)
+            await bot.send_message(message.chat.id, 'Back', reply_markup=markup)
 
     if message.text.lower() in '123456789':
         bot.send_message(message.chat.id, list_of_jokes[0])
         del list_of_jokes[0]
 
 @dp.callback_query_handler(lambda call: True)
-async def callback_func(query):
+async def callback_func(query: types.CallbackQuery):
     user_data = maps[query.message.chat.id]
     new_x, new_y = user_data['x'], user_data['y']
 
@@ -84,12 +82,12 @@ async def callback_func(query):
 
     if new_x == cols * 2 - 2 and new_y == rows * 2 - 2:
         await bot.edit_message_text( chat_id=query.message.chat.id,
-                               message_id=query.message.id,
+                               message_id=query.message.message_id,
                                text="Вы выиграли" )
         return None
 
     await bot.edit_message_text( chat_id=query.message.chat.id,
-                           message_id=query.Message.id,
+                           message_id=query.message.message_id,
                            text=get_map_str(user_data['map'], (new_x, new_y)),
                            reply_markup=keyboard)
 
