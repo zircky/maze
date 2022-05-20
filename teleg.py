@@ -1,8 +1,11 @@
 from aiogram import Bot, types, Dispatcher, executor, types
-from markup import keyboard, keyboard2, markup, helpKeyboard
+from markup import keyboard, keyboard2, markup
 from mg import get_map_cell
 from anekdot import list_of_jokes
+from sys import exit
 from config import TOKEN
+
+from messages import MESSAGE
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
@@ -14,7 +17,7 @@ async def command_start(message: types.Message):
     await bot.send_sticker(message.chat.id, sti)
 
     await bot.send_message(message.chat.id,
-                     "Добро пожаловать, {0.first_name}!\nЯ - <b> {1.first_name} </b>, игровой бот.".format(
+                     MESSAGE['start'].format(
                          message.from_user, await bot.get_me()), parse_mode='html', reply_markup=markup)
 
 maps = {}
@@ -49,11 +52,12 @@ async def play_maze(message):
         if message.text == 'Maze Game':
             await bot.send_message(message.from_user.id, get_map_str(map_cell, (0, 0)), reply_markup=keyboard)
         elif message.text == 'Help':
-            await bot.send_message(message.chat.id, 'Это помощь', reply_markup=helpKeyboard)
+            await bot.send_message(message.chat.id, MESSAGE['help'], reply_markup=keyboard2)
         elif message.text == 'Anekdot':
-            await bot.send_message(message.chat.id, 'Здравствуйте! Чтобы посмеяться введите любую цифру:')
-        elif message.text == 'Back':
-            await bot.send_message(message.chat.id, 'Back', reply_markup=markup)
+            await bot.send_message(message.chat.id, MESSAGE['anekdot'])
+        else:
+            if message.text == 'Out':
+                exit
 
     if message.text.lower() in '123456789':
         bot.send_message(message.chat.id, list_of_jokes[0])
@@ -98,3 +102,4 @@ async def bot_message(message: types.Message):
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
+
