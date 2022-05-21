@@ -9,9 +9,9 @@ keyboard.row( InlineKeyboardButton('←', callback_data='left'),
 			  InlineKeyboardButton('→', callback_data='right') )
 
 keyboard2 = InlineKeyboardMarkup()
-td = InlineKeyboardButton('Maze', url='https://ru.wikipedia.org/wiki/Лабиринт_(жанр)')
+maze = InlineKeyboardButton('Maze', url='https://ru.wikipedia.org/wiki/Лабиринт_(жанр)')
 #back = InlineKeyboardButton('Back', callback_data=)
-keyboard2.add(td)
+keyboard2.add(maze)
 
 markup = ReplyKeyboardMarkup(resize_keyboard=True)
 maze_game = KeyboardButton("Maze Game")

@@ -30,6 +30,8 @@ def get_map_str(map_cell, player):
                 map_str += "⬛"
             elif (x, y) == player:
                 map_str += "🔴"
+            elif x == cols * 2 - 2 and y == rows * 2 - 2:
+                map_str += "🔳"
             else:
                 map_str += "⬜"
         map_str += "\n"
@@ -55,9 +57,9 @@ async def play_maze(message):
             await bot.send_message(message.chat.id, MESSAGE['help'], reply_markup=keyboard2)
         elif message.text == 'Anekdot':
             await bot.send_message(message.chat.id, MESSAGE['anekdot'])
-        else:
-            if message.text == 'Out':
-                exit
+        elif message.text == 'Out':
+            await bot.send_message(message.chat.id, MESSAGE['exit'])
+            exit()
 
     if message.text.lower() in '123456789':
         bot.send_message(message.chat.id, list_of_jokes[0])

@@ -1,1 +1,3 @@
-TOKEN = 'Your token'
+from os import getenv
+
+TOKEN = getenv("TOKEN")
